@@ -12,7 +12,9 @@ import * as io from 'socket.io-client';
 export class HomeComponent implements OnInit {
 
   Published_at: string = null
-  Device: string = null
+  DeviceID: string = null
+  LocationID: string = null
+  DeviceType: string = null
   State: string = null
   Rpm: string = null
   Distance: string = null
@@ -33,7 +35,9 @@ export class HomeComponent implements OnInit {
     socket.on('xethrustatedata', (data) => {
       console.log(data)
       this.Published_at = data.data.published_at;
-      this.Device = data.data.device
+      this.LocationID = data.data.locationid
+      this.DeviceID = data.data.deviceid
+      this.DeviceType = data.data.devicetype
       this.State = data.data.state
       this.Rpm = data.data.rpm
       this.Distance = data.data.distance
