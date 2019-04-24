@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
 import * as io from 'socket.io-client';
 
 
@@ -122,6 +121,13 @@ export class HomeComponent implements OnInit {
       this.Timer_sesh = datasesh.data;
     });
   } 
+
+  ResetClick(): void {
+    const socket = io('https://odetect-dev.brave.coop/');
+    console.log("Reset Cliked");
+    //io.sockets.emit('timerdata', {data: sessionDuration});
+    socket.emit("resetbutton");
+  }
   
 
 

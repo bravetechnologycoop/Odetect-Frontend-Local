@@ -1,0 +1,51 @@
+<form [formGroup]="LocationForm" (ngSubmit)="onSubmitLocation()">
+  
+    <label>
+      Location ID:
+      <input type="text" formControlName="LocationID" required>
+    </label>
+    <br><br><br>
+    <button type="submit" class="btn" [disabled]="!LocationForm.valid">Get Location Data</button>
+  
+</form>
+<br><br><br>
+<form [formGroup]="LocationDataForm" (ngSubmit)="onSubmitLocationData()">
+  
+    <label>
+      Device ID:
+      <input type="text" formControlName="DeviceID" required>
+    </label>
+    <br><br>
+    <label>
+      Phone Number:
+      <input type="text" formControlName="PhoneNumber" required>
+    </label>
+    <br><br>
+    <label>
+      Detection Zone Min:
+      <input type="text" formControlName="DetectionZone_min" required>
+    </label>
+    <br><br>
+    <label>
+      Detection Zone Max:
+      <input type="text" formControlName="DetectionZone_max" required>
+    </label>
+    <br><br>
+    <label>
+      Sensitivity:
+      <input type="text" formControlName="Sensitivity" required>
+    </label>
+    <br><br>
+    <label>
+      LED:
+      <input type="text" formControlName="LED" required>
+    </label>
+    <br><br>
+    <label>
+      Noise Map:
+      <input type="text" formControlName="NoiseMap" required>
+    </label>
+    <br><br><br>
+    <button type="submit" class="btn" [disabled]="!LocationDataForm.valid">Submit</button>
+  
+</form>
