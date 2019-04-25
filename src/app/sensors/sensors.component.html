@@ -33,19 +33,47 @@
     <br><br>
     <label>
       Sensitivity:
-      <input type="text" formControlName="Sensitivity" required>
+      <input type="range" id="sensitivity" formControlName="Sensitivity" min="0" max="9" step="1" (change)="updateSensitivity(this.value)" (input)="updateSensitivity(this.value)" required>
+      {{Sensitivity}}
     </label>
     <br><br>
+    <div>
     <label>
       LED:
-      <input type="text" formControlName="LED" required>
     </label>
+    <label>
+      Full
+      <input type="radio" name="led" formControlName="LED" value="2" required>
+    </label>
+    <label>
+      Simple
+      <input type="radio" name="led" formControlName="LED" value="1" required>
+    </label>
+    <label>
+      Off
+      <input type="radio" name="led" formControlName="LED" value="0" required>
+    </label>
+    </div>
     <br><br>
     <label>
       Noise Map:
-      <input type="text" formControlName="NoiseMap" required>
+      <input type="text" id="noisemap" formControlName="NoiseMap" required> 
+        <!--
+      <label>
+        Default Noisemap
+        <input type="checkbox" id="noisemap4" name="noisemap4" value="4" (change)="updateNoisemapValue()">
+      </label>
+      <label>
+        Adaptive Noisemap
+        <input type="checkbox" id="noisemap2" name="noisemap2" value="2" (change)="updateNoisemapValue()">
+      </label>
+      <label>
+        Initialize Noisemap
+        <input type="checkbox" id="noisemap1" name="noisemap1" value="1" (change)="updateNoisemapValue()">
+      </label>
+            -->
     </label>
-    <br><br><br>
+    <br><br><br> 
     <button type="submit" class="btn" [disabled]="!LocationDataForm.valid">Submit</button>
   
 </form>

@@ -23,7 +23,33 @@ export class SensorsComponent implements OnInit {
     LED: new FormControl(''),
     NoiseMap: new FormControl('')
   });
+
+  updateSensitivity() {
+    var sensitivity = document.getElementById('sensitivity');
+    this.Sensitivity = sensitivity.value;
+  }
   
+  updateNoisemapValue() {
+    var one = document.getElementById("noisemap1");
+    var two = document.getElementById("noisemap2");
+    var four = document.getElementById("noisemap4");
+    var noisemap = document.getElementById("noisemap");
+
+    var noisemapValue = 0;
+
+    if(one.checked == true) {
+      noisemapValue += 1;
+    }
+    if(two.checked == true) {
+      noisemapValue += 2;
+    }
+    if(four.checked == true) {
+      noisemapValue += 4;
+    }
+
+    noisemap.defaultvalue = noisemapValue;
+    noisemap.value = noisemapValue;
+  }
 
   onSubmitLocation() {
     // TODO: Use EventEmitter with form value
@@ -44,7 +70,6 @@ export class SensorsComponent implements OnInit {
   ngOnInit(){
     const socket = io('https://odetect-dev.brave.coop/');
     socket.on("LocationData", (data) => {
-      console.log(typeof data.data === 'undefined')
       if(typeof data.data !== 'undefined'){
         this.LocationDataForm.patchValue({
           DeviceID: data.data.deviceid,
@@ -55,6 +80,10 @@ export class SensorsComponent implements OnInit {
           LED: data.data.led,
           NoiseMap: data.data.noisemap,
         });
+        this.Sensitivity = data.data.sensitivity;
+        console.log(data.data.sensitivity);
+        data = data.data.noisemap;
+        parseNoisemap(data);
       }
       else{
         this.LocationForm.patchValue({
@@ -71,6 +100,33 @@ export class SensorsComponent implements OnInit {
         });
       }
     });
+    var sensitivity = document.getElementById('sensitivity');
+    this.Sensitivity = sensitivity.value;
   }
+}
 
+function parseNoisemap(data) {
+  if(data%2 == 1) {
+    document.getElementById("noisemap1").checked = true;
+  }
+  else {
+    document.getElementById("noisemap1").checked = false;
+  }
+  console.log(data);
+  data = Math.floor(data/2);
+  if(data%2 == 1) {
+    document.getElementById("noisemap2").checked = true;
+  }
+  else {
+    document.getElementById("noisemap2").checked = false;
+  }
+  console.log(data);
+  data = Math.floor(data/2);
+  if(data%2 == 1) {
+    document.getElementById("noisemap4").checked = true;
+  }
+  else {
+    document.getElementById("noisemap4").checked = false;
+  }
+  console.log(data);
 }
