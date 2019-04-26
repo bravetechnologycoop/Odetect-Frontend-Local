@@ -10,6 +10,10 @@ import * as io from 'socket.io-client';
 
 export class SensorsComponent implements OnInit {
 
+  Max_Range: string = null
+  Min_Range: string = null
+  Sensitivity: string = null
+
   LocationForm = new FormGroup({
     LocationID: new FormControl('')
   });
@@ -21,8 +25,28 @@ export class SensorsComponent implements OnInit {
     DetectionZone_max: new FormControl(''),
     Sensitivity: new FormControl(''),
     LED: new FormControl(''),
-    NoiseMap: new FormControl('')
+    NoiseMap: new FormControl('0')
   });
+
+  updateMaxRange() {
+    var max = document.getElementById("max_range");
+    var min = document.getElementById("min_range");
+
+    if(max.value < min.value) {
+      max.value = min.value;
+    }
+    this.Max_Range = max.value;
+  }
+
+  updateMinRange() {
+    var max = document.getElementById("max_range");
+    var min = document.getElementById("min_range");
+
+    if(min.value > max.value) {
+      min.value = max.value;
+    }
+    this.Min_Range = min.value;
+  }
 
   updateSensitivity() {
     var sensitivity = document.getElementById('sensitivity');
@@ -33,22 +57,22 @@ export class SensorsComponent implements OnInit {
     var one = document.getElementById("noisemap1");
     var two = document.getElementById("noisemap2");
     var four = document.getElementById("noisemap4");
-    var noisemap = document.getElementById("noisemap");
 
     var noisemapValue = 0;
 
     if(one.checked == true) {
-      noisemapValue += 1;
+      noisemapValue += parseInt(one.value, 10);
     }
     if(two.checked == true) {
-      noisemapValue += 2;
+      noisemapValue += parseInt(two.value, 10);
     }
     if(four.checked == true) {
-      noisemapValue += 4;
+      noisemapValue += parseInt(four.value, 10);
     }
 
-    noisemap.defaultvalue = noisemapValue;
-    noisemap.value = noisemapValue;
+    this.LocationDataForm.patchValue({
+      NoiseMap: noisemapValue,
+    });
   }
 
   onSubmitLocation() {
@@ -81,9 +105,7 @@ export class SensorsComponent implements OnInit {
           NoiseMap: data.data.noisemap,
         });
         this.Sensitivity = data.data.sensitivity;
-        console.log(data.data.sensitivity);
-        data = data.data.noisemap;
-        parseNoisemap(data);
+        parseNoisemap(data.data.noisemap);
       }
       else{
         this.LocationForm.patchValue({
@@ -112,7 +134,6 @@ function parseNoisemap(data) {
   else {
     document.getElementById("noisemap1").checked = false;
   }
-  console.log(data);
   data = Math.floor(data/2);
   if(data%2 == 1) {
     document.getElementById("noisemap2").checked = true;
@@ -120,7 +141,6 @@ function parseNoisemap(data) {
   else {
     document.getElementById("noisemap2").checked = false;
   }
-  console.log(data);
   data = Math.floor(data/2);
   if(data%2 == 1) {
     document.getElementById("noisemap4").checked = true;
@@ -128,5 +148,4 @@ function parseNoisemap(data) {
   else {
     document.getElementById("noisemap4").checked = false;
   }
-  console.log(data);
 }
