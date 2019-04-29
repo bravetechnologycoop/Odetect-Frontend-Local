@@ -1,6 +1,25 @@
 <h1>Sessions History</h1>
 
 <body>
+  <form [formGroup]="HistoryForm" (ngSubmit)="HistorySelector()">
+    <label>
+      Location:
+      <select formControlName="HistorySelect">
+        <option value="BraveOffice">BraveOffice</option>
+        <option value="BraveOffice2">BraveOffice2</option>
+      </select>
+    </label>
+    <br>
+    <label>
+      Number of Entries:
+      <input type="text" formControlName="NumEntries" required>
+    </label>
+    <br>
+    <br>
+      <input type="submit" value="select" class="btn">
+  </form>
+  <br>
+
   <table id="sessionsHistory" style="table-layout: fixed">
     <tr>
       <th>Location ID</th>

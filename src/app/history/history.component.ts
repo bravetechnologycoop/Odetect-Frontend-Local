@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
 
 @Component({
@@ -8,6 +9,14 @@ import * as io from 'socket.io-client';
 })
 
 export class HistoryComponent implements OnInit {
+
+  Location: string = "BraveOffice"
+  Entries: string = "15"
+
+  HistoryForm = new FormGroup({
+    HistorySelect: new FormControl('BraveOffice'),
+    NumEntries: new FormControl('15')
+  });
 
   constructor(/*private data: DataService*/) { }
 
@@ -20,19 +29,15 @@ export class HistoryComponent implements OnInit {
       console.log(data);
     });
     
-    socket.emit('getHistory', 'BraveOffice');
-
-
-    // This value is here because the loop would be run multiple times
-    // when there is navigation between the frontend tabs
-    // which caused the table to get increasingly larger
-    // This removes that issue by raising the flag after the first loop
-    // preventing the loop from executing more times
-    let singleGenFlag = 0;
-
     socket.on('sendHistory', (datasesh) => {
+      // Deletes the old table to replace it with the new selection 
+      let oldTable = <HTMLTableElement>document.getElementById('sessionsHistory');
+      for(var x = oldTable.rows.length; x > 1; x--)
+        {
+         oldTable.deleteRow(x-1);
+        }
+
       var i;
-      if(singleGenFlag == 0) {
         for(i = 0; datasesh.data[i] != null; i++) {
           let table = <HTMLTableElement>document.getElementById('sessionsHistory');
           let row = table.insertRow(i+1);
@@ -56,19 +61,11 @@ export class HistoryComponent implements OnInit {
           let state = row.insertCell(4);
           state.className = 'historyCell';
           state.innerHTML = datasesh.data[i].state.split(':')[0];
-          /*
-          let odflag = row.insertCell(5);
-          odflag.className = 'historyCell';
-          odflag.innerHTML = datasesh.data[i].od_flag;
-          */
+
           let duration = row.insertCell(5);
           duration.className = 'historyCell';
           duration.innerHTML = datasesh.data[i].duration;
-          /*
-          let stillcounter = row.insertCell(6);
-          stillcounter.className = 'historyCell';
-          stillcounter.innerHTML = datasesh.data[i].still_counter;
-          */
+
           let chatbotstate = row.insertCell(6);
           chatbotstate.className = 'historyCell';
           chatbotstate.innerHTML = datasesh.data[i].chatbot_state;
@@ -81,8 +78,14 @@ export class HistoryComponent implements OnInit {
           notes.className = 'historyCell';
           notes.innerHTML = datasesh.data[i].notes;
         }
-        singleGenFlag = 1;
-      }
     });
   } 
+  HistorySelector(){
+    const socket = io('https://odetect-dev.brave.coop/');
+
+    this.Location = this.HistoryForm.value.HistorySelect
+    this.Entries = this.HistoryForm.value.NumEntries
+
+    socket.emit('getHistory', this.Location, this.Entries);
+  }
 }

@@ -1,8 +1,8 @@
 <h1>Dashboard</h1>
 
   <body>
-  <form [formGroup]="LocationForm" (ngSubmit)="LocationSelector(this.value)">
-      <select formControlName="LocationControl" id="ls">
+  <form [formGroup]="LocationForm" (ngSubmit)="LocationSelector()">
+      <select formControlName="LocationControl">
         <option value="BraveOffice">BraveOffice</option>
         <option value="BraveOffice2">BraveOffice2</option>
       </select>
