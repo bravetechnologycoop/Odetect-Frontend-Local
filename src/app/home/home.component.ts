@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
 
 
@@ -51,10 +52,15 @@ export class HomeComponent implements OnInit {
 
   Timer_sesh: string = '0'
 
+  Location: string = "BraveOffice" 
+  LocationForm = new FormGroup({
+    LocationControl: new FormControl('BraveOffice'),
+  });
 
-  constructor(/*private data: DataService*/) { }
+  constructor() {}
 
   ngOnInit(): void {
+
     const socket = io('https://odetect-dev.brave.coop/');
 
     socket.on('Hello', (data) => {
@@ -62,62 +68,72 @@ export class HomeComponent implements OnInit {
     });
 
     socket.on('xethrustatedata', (data) => {
-      console.log(data)
-      this.Published_at = data.data.published_at;
-      this.LocationID = data.data.locationid;
-      this.DeviceID = data.data.deviceid;
-      this.DeviceType = data.data.devicetype;
-      this.State = data.data.state;
-      this.Rpm = data.data.rpm;
-      this.Distance = data.data.distance;
-      this.Mov_f = data.data.mov_f;
-      this.Mov_s = data.data.mov_s;
+      if(data.data.locationid == this.Location){
+        //console.log(data)
+        this.Published_at = data.data.published_at.slice(0, 19);
+        this.LocationID = data.data.locationid;
+        this.DeviceID = data.data.deviceid;
+        this.DeviceType = data.data.devicetype;
+        this.State = data.data.state;
+        this.Rpm = data.data.rpm;
+        this.Distance = data.data.distance;
+        this.Mov_f = data.data.mov_f;
+        this.Mov_s = data.data.mov_s;
+      }
     });
 
     socket.on('motionstatedata', (datam) => {
-      console.log(datam)
-      this.Published_at_m = datam.data.published_at;
-      this.LocationID_m = datam.data.locationid;
-      this.DeviceID_m = datam.data.deviceid;
-      this.DeviceType_m = datam.data.devicetype;
-      this.Signal_m = datam.data.signal;
+      if(datam.data.locationid == this.Location){
+        //console.log(datam)
+        this.Published_at_m = datam.data.published_at.slice(0, 19);
+        this.LocationID_m = datam.data.locationid;
+        this.DeviceID_m = datam.data.deviceid;
+        this.DeviceType_m = datam.data.devicetype;
+        this.Signal_m = datam.data.signal;
+      }
     });
 
     socket.on('doorstatedata', (datad) => {
-      console.log(datad)
-      this.Published_at_d = datad.data.published_at;
-      this.LocationID_d = datad.data.locationid;
-      this.DeviceID_d = datad.data.deviceid;
-      this.DeviceType_d = datad.data.devicetype;
-      this.Signal_d = datad.data.signal;
+      if(datad.data.locationid == this.Location){
+        //console.log(datad)
+        this.Published_at_d = datad.data.published_at.slice(0, 19);
+        this.LocationID_d = datad.data.locationid;
+        this.DeviceID_d = datad.data.deviceid;
+        this.DeviceType_d = datad.data.devicetype;
+        this.Signal_d = datad.data.signal;
+      }
     });
 
     socket.on('statedata', (datast) => {
-      console.log(datast)
-      this.LocationID_st = datast.data.locationid;
-      this.Published_at_st = datast.data.published_at;
-      this.State_st = datast.data.state;
+      if(datast.data.locationid == this.Location){
+        //console.log(datast)
+        this.LocationID_st = datast.data.locationid;
+        this.Published_at_st = datast.data.published_at.slice(0, 19);
+        this.State_st = datast.data.state;
+      }
     });
 
     
     socket.on('sessiondata', (datasesh) => {
-      console.log(datasesh)
-      this.LocationID_sesh = datasesh.data.locationid;
-      this.SessionID_sesh = datasesh.data.sessionid;
-      this.Start_time_sesh = datasesh.data.start_time;
-      this.End_time_sesh = datasesh.data.end_time;
-      this.State_sesh = datasesh.data.state;
-      this.Od_flag = datasesh.data.od_flag;
-      this.Duration_sesh = datasesh.data.duration;
-      this.Still_counter = datasesh.data.still_counter;
-      this.Chatbot_state = datasesh.data.chatbot_state;
-      this.Notes_sesh = datasesh.data.notes;
-      this.IncidentType_sesh = datasesh.data.incidenttype;
+      if(datasesh.data.locationid == this.Location){
+        //console.log(datasesh)
+        this.LocationID_sesh = datasesh.data.locationid;
+        this.SessionID_sesh = datasesh.data.sessionid;
+        this.Start_time_sesh = datasesh.data.start_time.slice(0, 19);
+        this.End_time_sesh = datasesh.data.end_time.slice(0, 19);
+        this.State_sesh = datasesh.data.state;
+        this.Od_flag = datasesh.data.od_flag;
+        this.Duration_sesh = datasesh.data.duration;
+        this.Still_counter = datasesh.data.still_counter;
+        this.Chatbot_state = datasesh.data.chatbot_state;
+        this.Notes_sesh = datasesh.data.notes;
+        this.IncidentType_sesh = datasesh.data.incidenttype;
+      }
     });
 
         
     socket.on('timerdata', (datasesh) => {
-      console.log(datasesh)
+      //console.log(datasesh)
       this.Timer_sesh = datasesh.data;
     });
   } 
@@ -126,9 +142,11 @@ export class HomeComponent implements OnInit {
     const socket = io('https://odetect-dev.brave.coop/');
     console.log("Reset Cliked");
     //io.sockets.emit('timerdata', {data: sessionDuration});
-    socket.emit("resetbutton");
+    socket.emit("resetbutton", this.Location);
   }
-  
 
-
+  LocationSelector(): void {
+    this.Location = this.LocationForm.value.LocationControl
+    console.log(this.LocationForm.value.LocationControl);
+  }
 }

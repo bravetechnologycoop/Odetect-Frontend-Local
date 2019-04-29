@@ -1,6 +1,14 @@
 <h1>Dashboard</h1>
 
-<body>
+  <body>
+  <form [formGroup]="LocationForm" (ngSubmit)="LocationSelector(this.value)">
+      <select formControlName="LocationControl" id="ls">
+        <option value="BraveOffice">BraveOffice</option>
+        <option value="BraveOffice2">BraveOffice2</option>
+      </select>
+      <input type="submit" value="select" class="btn">
+  </form>
+
   <p>Latest Session and State Data</p>
   <table style="table-layout: fixed">
     <tr>
