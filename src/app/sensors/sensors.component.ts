@@ -38,17 +38,6 @@ export class SensorsComponent implements OnInit {
     this.Max_Range = max.value;
   }
 
-  checkLength(input) {
-    var first = <HTMLInputElement>document.getElementById("areacode");
-    var second = <HTMLInputElement>document.getElementById("phone3");
-    var third = <HTMLInputElement>document.getElementById("phone4");
-    var phone = String("+1" + first.value + second.value + third.value);
-    var number = String(input);
-    this.LocationDataForm.patchValue({
-      PhoneNumber: phone,
-    });
-  }
-
   updateMinRange() {
     var max = <HTMLInputElement>document.getElementById("max_range");
     var min = <HTMLInputElement>document.getElementById("min_range");
@@ -108,7 +97,7 @@ export class SensorsComponent implements OnInit {
       if(typeof data.data !== 'undefined'){
         this.LocationDataForm.patchValue({
           DeviceID: data.data.deviceid,
-          PhoneNumber: data.data.phonenumber,
+          PhoneNumber: data.data.phonenumber.slice(2),
           DetectionZone_min: data.data.detectionzone_min,
           DetectionZone_max: data.data.detectionzone_max,
           Sensitivity: data.data.sensitivity,

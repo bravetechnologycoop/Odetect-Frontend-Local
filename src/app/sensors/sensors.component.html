@@ -18,9 +18,12 @@
     <br><br>
     <label>
       Phone Number: +1
-      (<input type="number" id="areacode" maxLength="3" (input)="checkLength(this)" required>) -
+      <input type="text"  maxLength="10" formControlName="PhoneNumber" required>
+      <!--
+      (<input type="text" id="areacode" maxLength="3" (input)="checkLength(this)" required>) -
       <input type="number" id="phone3" maxLength="3" (input)="checkLength(this)" required> -
       <input type="number" id="phone4" maxLength="4" (input)="checkLength(this)" required>
+      -->
     </label>
     <br><br>
     <label>
