@@ -21,16 +21,16 @@ export class SensorsComponent implements OnInit {
   LocationDataForm = new FormGroup({
     DeviceID: new FormControl(''),
     PhoneNumber: new FormControl(''),
-    DetectionZone_min: new FormControl(''),
-    DetectionZone_max: new FormControl(''),
+    DetectionZone_min: new FormControl('0.4'),
+    DetectionZone_max: new FormControl('5'),
     Sensitivity: new FormControl(''),
     LED: new FormControl(''),
     NoiseMap: new FormControl('0')
   });
 
   updateMaxRange() {
-    var max = document.getElementById("max_range");
-    var min = document.getElementById("min_range");
+    var max = <HTMLInputElement>document.getElementById("max_range");
+    var min = <HTMLInputElement>document.getElementById("min_range");
 
     if(max.value < min.value) {
       max.value = min.value;
@@ -38,9 +38,20 @@ export class SensorsComponent implements OnInit {
     this.Max_Range = max.value;
   }
 
+  checkLength(input) {
+    var first = <HTMLInputElement>document.getElementById("areacode");
+    var second = <HTMLInputElement>document.getElementById("phone3");
+    var third = <HTMLInputElement>document.getElementById("phone4");
+    var phone = String("+1" + first.value + second.value + third.value);
+    var number = String(input);
+    this.LocationDataForm.patchValue({
+      PhoneNumber: phone,
+    });
+  }
+
   updateMinRange() {
-    var max = document.getElementById("max_range");
-    var min = document.getElementById("min_range");
+    var max = <HTMLInputElement>document.getElementById("max_range");
+    var min = <HTMLInputElement>document.getElementById("min_range");
 
     if(min.value > max.value) {
       min.value = max.value;
@@ -49,14 +60,14 @@ export class SensorsComponent implements OnInit {
   }
 
   updateSensitivity() {
-    var sensitivity = document.getElementById('sensitivity');
+    var sensitivity = <HTMLInputElement>document.getElementById('sensitivity');
     this.Sensitivity = sensitivity.value;
   }
   
   updateNoisemapValue() {
-    var one = document.getElementById("noisemap1");
-    var two = document.getElementById("noisemap2");
-    var four = document.getElementById("noisemap4");
+    var one = <HTMLInputElement>document.getElementById("noisemap1");
+    var two = <HTMLInputElement>document.getElementById("noisemap2");
+    var four = <HTMLInputElement>document.getElementById("noisemap4");
 
     var noisemapValue = 0;
 
@@ -105,6 +116,8 @@ export class SensorsComponent implements OnInit {
           NoiseMap: data.data.noisemap,
         });
         this.Sensitivity = data.data.sensitivity;
+        this.Min_Range = data.data.detectionzone_min;
+        this.Max_Range = data.data.detectionzone_max;
         parseNoisemap(data.data.noisemap);
       }
       else{
@@ -122,30 +135,33 @@ export class SensorsComponent implements OnInit {
         });
       }
     });
-    var sensitivity = document.getElementById('sensitivity');
+    var sensitivity = <HTMLInputElement>document.getElementById('sensitivity');
     this.Sensitivity = sensitivity.value;
+    this.Min_Range = "0.4";
+    this.Max_Range = "5";
   }
 }
 
 function parseNoisemap(data) {
   if(data%2 == 1) {
-    document.getElementById("noisemap1").checked = true;
+    (<HTMLInputElement>document.getElementById("noisemap1")).checked = true;
   }
   else {
-    document.getElementById("noisemap1").checked = false;
+    (<HTMLInputElement>document.getElementById("noisemap1")).checked = false;
   }
   data = Math.floor(data/2);
   if(data%2 == 1) {
-    document.getElementById("noisemap2").checked = true;
+    (<HTMLInputElement>document.getElementById("noisemap2")).checked = true;
   }
   else {
-    document.getElementById("noisemap2").checked = false;
+    (<HTMLInputElement>document.getElementById("noisemap2")).checked = false;
   }
   data = Math.floor(data/2);
   if(data%2 == 1) {
-    document.getElementById("noisemap4").checked = true;
+    (<HTMLInputElement>document.getElementById("noisemap4")).checked = true;
   }
   else {
-    document.getElementById("noisemap4").checked = false;
+    (<HTMLInputElement>document.getElementById("noisemap4")).checked = false;
   }
 }
+

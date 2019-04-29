@@ -17,8 +17,10 @@
     </label>
     <br><br>
     <label>
-      Phone Number:
-      <input type="text" formControlName="PhoneNumber" required>
+      Phone Number: +1
+      (<input type="number" id="areacode" maxLength="3" (input)="checkLength(this)" required>) -
+      <input type="number" id="phone3" maxLength="3" (input)="checkLength(this)" required> -
+      <input type="number" id="phone4" maxLength="4" (input)="checkLength(this)" required>
     </label>
     <br><br>
     <label>
@@ -44,32 +46,32 @@
       LED:
     </label>
     <label>
+      <input type="radio" formControlName="LED" value="2" required>
       Full
-      <input type="radio" name="led" formControlName="LED" value="2" required>
     </label>
     <label>
+      <input type="radio" formControlName="LED" value="1" required>
       Simple
-      <input type="radio" name="led" formControlName="LED" value="1" required>
     </label>
     <label>
+      <input type="radio" formControlName="LED" value="0" required>
       Off
-      <input type="radio" name="led" formControlName="LED" value="0" required>
     </label>
     </div>
     <br><br>
     <label>
       Noise Map:        
       <label>
-        Default Noisemap
         <input type="checkbox" id="noisemap4" name="noisemap4" value="4" (change)="updateNoisemapValue()">
+        Default
       </label>
       <label>
-        Adaptive Noisemap
         <input type="checkbox" id="noisemap2" name="noisemap2" value="2" (change)="updateNoisemapValue()">
+        Adaptive
       </label>
       <label>
-        Initialize Noisemap
         <input type="checkbox" id="noisemap1" name="noisemap1" value="1" (change)="updateNoisemapValue()">
+        Initialize
       </label>
             
     </label>
