@@ -120,7 +120,12 @@ export class HomeComponent implements OnInit {
         this.LocationID_sesh = datasesh.data.locationid;
         this.SessionID_sesh = datasesh.data.sessionid;
         this.Start_time_sesh = datasesh.data.start_time.slice(0, 19);
-        this.End_time_sesh = datasesh.data.end_time.slice(0, 19);
+        if(datasesh.data.end_time != null){
+          this.End_time_sesh = datasesh.data.end_time.slice(0, 19);
+        }
+        else{
+          this.End_time_sesh = null;
+        }
         this.State_sesh = datasesh.data.state;
         this.Od_flag = datasesh.data.od_flag;
         this.Duration_sesh = datasesh.data.duration;

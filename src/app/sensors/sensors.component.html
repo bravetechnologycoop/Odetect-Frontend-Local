@@ -27,6 +27,26 @@
     </label>
     <br><br>
     <label>
+      RPM Threshold:
+      <input type="text"  formControlName="RPM_Threshold" required>
+    </label>
+    <br><br>
+    <label>
+      Still Threshold:
+      <input type="text"  formControlName="Still_Threshold" required>
+    </label>
+    <br><br>
+    <label>
+      Duration Threshold:
+      <input type="text"  formControlName="Duration_Threshold" required>
+    </label>
+    <br><br>
+    <label>
+      Movement Threshold:
+      <input type="text" formControlName="Mov_Threshold" required>
+    </label>
+    <br><br>
+    <label>
       Detection Zone Min:
       <input type="range" id="min_range" formControlName="DetectionZone_min" min="0.4" max="5" step="0.1" (change)="updateMinRange()" (input)="updateMinRange()" required>
       {{Min_Range}}

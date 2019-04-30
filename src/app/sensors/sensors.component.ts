@@ -21,6 +21,10 @@ export class SensorsComponent implements OnInit {
   LocationDataForm = new FormGroup({
     DeviceID: new FormControl(''),
     PhoneNumber: new FormControl(''),
+    RPM_Threshold: new FormControl(''),
+    Still_Threshold: new FormControl(''),
+    Duration_Threshold: new FormControl(''),
+    Mov_Threshold: new FormControl(''),
     DetectionZone_min: new FormControl('0.4'),
     DetectionZone_max: new FormControl('5'),
     Sensitivity: new FormControl(''),
@@ -98,6 +102,10 @@ export class SensorsComponent implements OnInit {
         this.LocationDataForm.patchValue({
           DeviceID: data.data.deviceid,
           PhoneNumber: data.data.phonenumber.slice(2),
+          RPM_Threshold: data.data.rpm_threshold,
+          Still_Threshold: data.data.still_threshold,
+          Duration_Threshold: data.data.duration_threshold,
+          Mov_Threshold: data.data.mov_threshold,
           DetectionZone_min: data.data.detectionzone_min,
           DetectionZone_max: data.data.detectionzone_max,
           Sensitivity: data.data.sensitivity,
@@ -116,6 +124,10 @@ export class SensorsComponent implements OnInit {
         this.LocationDataForm.patchValue({
           DeviceID: null,
           PhoneNumber: null,
+          RPM_Threshold: null,
+          Still_Threshold: null,
+          Duration_Threshold: null,
+          Mov_Threshold: null,
           DetectionZone_min: null,
           DetectionZone_max: null,
           Sensitivity: null,
