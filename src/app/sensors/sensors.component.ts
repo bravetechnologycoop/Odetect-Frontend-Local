@@ -52,6 +52,7 @@ export class SensorsComponent implements OnInit {
     this.Min_Range = min.value;
   }
 
+
   updateSensitivity() {
     var sensitivity = <HTMLInputElement>document.getElementById('sensitivity');
     this.Sensitivity = sensitivity.value;
@@ -87,6 +88,11 @@ export class SensorsComponent implements OnInit {
   }
 
   onSubmitLocationData(){
+    let phone = <HTMLInputElement>document.getElementById("phonenumber");
+    this.LocationDataForm.patchValue({
+      PhoneNumber: "+1" + phone.value,
+    });
+
     var LocationID = this.LocationForm.value;
     var LocationData = this.LocationDataForm.value;
     var FullLocationData = {LocationID, LocationData}
@@ -116,6 +122,8 @@ export class SensorsComponent implements OnInit {
         this.Min_Range = data.data.detectionzone_min;
         this.Max_Range = data.data.detectionzone_max;
         parseNoisemap(data.data.noisemap);
+        var phoneNumber = <HTMLInputElement>document.getElementById('phonenumber');
+        phoneNumber.value = data.data.phonenumber.slice(2);
       }
       else{
         this.LocationForm.patchValue({
@@ -165,4 +173,3 @@ function parseNoisemap(data) {
     (<HTMLInputElement>document.getElementById("noisemap4")).checked = false;
   }
 }
-
