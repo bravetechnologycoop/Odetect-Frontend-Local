@@ -14,7 +14,7 @@ export class HistoryComponent implements OnInit {
   Entries: string = "15"
 
   HistoryForm = new FormGroup({
-    HistorySelect: new FormControl('BraveOffice'),
+    HistorySelect: new FormControl('EVR'),
     NumEntries: new FormControl('15')
   });
 
