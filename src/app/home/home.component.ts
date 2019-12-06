@@ -1,7 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
+import * as moment from 'moment-timezone';
+import helpers from '../app.functions'
 
+// //Helper function to display timestamps in client's timezone
+// function formatDate(date){
+//         var m = moment.tz(date,'Europe/London')
+//         var localm = m.clone().tz(moment.tz.guess())
+//         return localm.format('dddd, MMMM Do YYYY, h:mm:ss a');
+//   }
+
+// //Helper function to display numbers to precision
+// function formatMovementReading(x){
+// return Number.parseFloat(x).toPrecision(1)
+
+// }
 
 @Component({
   selector: 'app-home',
@@ -54,14 +68,15 @@ export class HomeComponent implements OnInit {
 
   Location: string = "BraveOffice" 
   LocationForm = new FormGroup({
-    LocationControl: new FormControl('BraveOffice'),
+    LocationControl: new FormControl('EVR'),
   });
 
   constructor() {}
 
   ngOnInit(): void {
-
     const socket = io('https://odetect-dev.brave.coop/');
+    moment.tz.setDefault("UTC");
+
 
     socket.on('Hello', (data) => {
       console.log(data);
@@ -69,35 +84,25 @@ export class HomeComponent implements OnInit {
 
     socket.on('xethrustatedata', (data) => {
       if(data.data.locationid == this.Location){
+
         //console.log(data)
-        this.Published_at = data.data.published_at.slice(0, 19);
-        this.LocationID = data.data.locationid;
+        this.Published_at = helpers.formatDate(data.data.published_at);
+        this.LocationID = "EVR";
         this.DeviceID = data.data.deviceid;
         this.DeviceType = data.data.devicetype;
         this.State = data.data.state;
         this.Rpm = data.data.rpm;
         this.Distance = data.data.distance;
-        this.Mov_f = data.data.mov_f;
-        this.Mov_s = data.data.mov_s;
-      }
-    });
-
-    socket.on('motionstatedata', (datam) => {
-      if(datam.data.locationid == this.Location){
-        //console.log(datam)
-        this.Published_at_m = datam.data.published_at.slice(0, 19);
-        this.LocationID_m = datam.data.locationid;
-        this.DeviceID_m = datam.data.deviceid;
-        this.DeviceType_m = datam.data.devicetype;
-        this.Signal_m = datam.data.signal;
+        this.Mov_f = helpers.formatMovementReading(data.data.mov_f);
+        this.Mov_s = helpers.formatMovementReading(data.data.mov_s);
       }
     });
 
     socket.on('doorstatedata', (datad) => {
       if(datad.data.locationid == this.Location){
         //console.log(datad)
-        this.Published_at_d = datad.data.published_at.slice(0, 19);
-        this.LocationID_d = datad.data.locationid;
+        this.Published_at_d = helpers.formatDate(datad.data.published_at);
+        this.LocationID_d = 'EVR';
         this.DeviceID_d = datad.data.deviceid;
         this.DeviceType_d = datad.data.devicetype;
         this.Signal_d = datad.data.signal;
@@ -107,8 +112,8 @@ export class HomeComponent implements OnInit {
     socket.on('statedata', (datast) => {
       if(datast.data.locationid == this.Location){
         //console.log(datast)
-        this.LocationID_st = datast.data.locationid;
-        this.Published_at_st = datast.data.published_at.slice(0, 19);
+        this.LocationID_st = 'EVR';
+        this.Published_at_st = helpers.formatDate(datast.data.published_at);
         this.State_st = datast.data.state;
       }
     });
@@ -117,11 +122,11 @@ export class HomeComponent implements OnInit {
     socket.on('sessiondata', (datasesh) => {
       if(datasesh.data.locationid == this.Location){
         //console.log(datasesh)
-        this.LocationID_sesh = datasesh.data.locationid;
+        this.LocationID_sesh = 'EVR';
         this.SessionID_sesh = datasesh.data.sessionid;
-        this.Start_time_sesh = datasesh.data.start_time.slice(0, 19);
+        this.Start_time_sesh = helpers.formatDate(datasesh.data.start_time);
         if(datasesh.data.end_time != null){
-          this.End_time_sesh = datasesh.data.end_time.slice(0, 19);
+          this.End_time_sesh = helpers.formatDate(datasesh.data.end_time);
         }
         else{
           this.End_time_sesh = null;

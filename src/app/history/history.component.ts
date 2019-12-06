@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
+import helpers from '../app.functions'
 
 @Component({
   selector: 'app-history',
@@ -44,7 +45,7 @@ export class HistoryComponent implements OnInit {
 
           let location = row.insertCell(0);
           location.className = "historyCell";
-          location.innerHTML = datasesh.data[i].locationid;
+          location.innerHTML = "EVR";
 
           let sessionid = row.insertCell(1);
           sessionid.className = 'historyCell';
@@ -52,11 +53,11 @@ export class HistoryComponent implements OnInit {
 
           let starttime = row.insertCell(2);
           starttime.className = 'historyCell';
-          starttime.innerHTML = datasesh.data[i].start_time.slice(0,19);
+          starttime.innerHTML = helpers.formatDate(datasesh.data[i].start_time);
 
           let endtime = row.insertCell(3);
           endtime.className = 'historyCell';
-          endtime.innerHTML = datasesh.data[i].end_time.slice(0,19);
+          endtime.innerHTML = helpers.formatDate(datasesh.data[i].end_time);
 
           let state = row.insertCell(4);
           state.className = 'historyCell';
