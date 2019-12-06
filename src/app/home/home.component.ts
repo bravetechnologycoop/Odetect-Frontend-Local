@@ -153,6 +153,7 @@ export class HomeComponent implements OnInit {
     console.log("Reset Cliked");
     //io.sockets.emit('timerdata', {data: sessionDuration});
     socket.emit("resetbutton", this.Location);
+    this.Timer_sesh = '0';
   }
 
   LocationSelector(): void {
