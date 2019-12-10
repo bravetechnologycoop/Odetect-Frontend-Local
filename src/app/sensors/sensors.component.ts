@@ -83,7 +83,7 @@ export class SensorsComponent implements OnInit {
   onSubmitLocation() {
     // TODO: Use EventEmitter with form value
     console.log(this.LocationForm.value);
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://odetect-dev2.brave.coop/');
     socket.emit("SubmitLocation", this.LocationForm.value);
   }
 
@@ -97,12 +97,12 @@ export class SensorsComponent implements OnInit {
     var LocationData = this.LocationDataForm.value;
     var FullLocationData = {LocationID, LocationData}
     console.log(FullLocationData);
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://odetect-dev2.brave.coop/');
     socket.emit("SubmitLocationData", FullLocationData);
   }
 
   ngOnInit(){
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://odetect-dev2.brave.coop/');
     socket.on("LocationData", (data) => {
       if(typeof data.data !== 'undefined'){
         this.LocationDataForm.patchValue({

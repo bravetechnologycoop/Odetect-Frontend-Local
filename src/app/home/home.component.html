@@ -1,9 +1,12 @@
 <h1>Dashboard</h1>
 
   <body>
-  <form [formGroup]="LocationForm" (ngSubmit)="LocationSelector()">
-      <select formControlName="LocationControl">
-        <option value="BraveOffice">EVR</option>
+  <form [formGroup]="form" (ngSubmit)="LocationSelector()">
+      <label for="locations">Location</label>
+      <select formControlName="locations" id ="locations">
+        <option *ngFor="let location of locations; let i = index" [value]="locations[i]">
+          {{locations[i]}}
+        </option>
       </select>
       <input type="submit" value="select" class="btn">
   </form>

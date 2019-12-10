@@ -2,20 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
 import * as moment from 'moment-timezone';
-import helpers from '../app.functions'
-
-// //Helper function to display timestamps in client's timezone
-// function formatDate(date){
-//         var m = moment.tz(date,'Europe/London')
-//         var localm = m.clone().tz(moment.tz.guess())
-//         return localm.format('dddd, MMMM Do YYYY, h:mm:ss a');
-//   }
-
-// //Helper function to display numbers to precision
-// function formatMovementReading(x){
-// return Number.parseFloat(x).toPrecision(1)
-
-// }
+import helpers from '../app.functions';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +12,10 @@ import helpers from '../app.functions'
 })
 
 export class HomeComponent implements OnInit {
+
+  form: FormGroup = null;
+  locations = [];
+
 
   Published_at: string = null
   DeviceID: string = null
@@ -66,28 +58,35 @@ export class HomeComponent implements OnInit {
 
   Timer_sesh: string = '0'
 
-  Location: string = "BraveOffice" 
-  LocationForm = new FormGroup({
-    LocationControl: new FormControl('EVR'),
-  });
+  Location: string = "" ;
 
-  constructor() {}
+  constructor(private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
+      locations: ['']
+    });
+
+
+    of(this.getLocations()).subscribe(locations => {
+      this.locations = locations;
+      this.form.controls.locations.patchValue(Location);
+    });
+  }
 
   ngOnInit(): void {
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://odetect-dev2.brave.coop/');
     moment.tz.setDefault("UTC");
-
-
+    this.getLocations()
     socket.on('Hello', (data) => {
       console.log(data);
     });
 
     socket.on('xethrustatedata', (data) => {
+
       if(data.data.locationid == this.Location){
 
         //console.log(data)
         this.Published_at = helpers.formatDate(data.data.published_at);
-        this.LocationID = "EVR";
+        this.LocationID = data.data.locationid;
         this.DeviceID = data.data.deviceid;
         this.DeviceType = data.data.devicetype;
         this.State = data.data.state;
@@ -102,7 +101,7 @@ export class HomeComponent implements OnInit {
       if(datad.data.locationid == this.Location){
         //console.log(datad)
         this.Published_at_d = helpers.formatDate(datad.data.published_at);
-        this.LocationID_d = 'EVR';
+        this.LocationID_d = datad.data.locationid;
         this.DeviceID_d = datad.data.deviceid;
         this.DeviceType_d = datad.data.devicetype;
         this.Signal_d = datad.data.signal;
@@ -112,7 +111,7 @@ export class HomeComponent implements OnInit {
     socket.on('statedata', (datast) => {
       if(datast.data.locationid == this.Location){
         //console.log(datast)
-        this.LocationID_st = 'EVR';
+        this.LocationID_st = datast.data.locationid;
         this.Published_at_st = helpers.formatDate(datast.data.published_at);
         this.State_st = datast.data.state;
       }
@@ -121,8 +120,8 @@ export class HomeComponent implements OnInit {
     
     socket.on('sessiondata', (datasesh) => {
       if(datasesh.data.locationid == this.Location){
-        //console.log(datasesh)
-        this.LocationID_sesh = 'EVR';
+        // console.log(datasesh)
+        this.LocationID_sesh = datasesh.data.locationid;
         this.SessionID_sesh = datasesh.data.sessionid;
         this.Start_time_sesh = helpers.formatDate(datasesh.data.start_time);
         if(datasesh.data.end_time != null){
@@ -140,7 +139,11 @@ export class HomeComponent implements OnInit {
         this.IncidentType_sesh = datasesh.data.incidenttype;
       }
     });
-
+    
+    socket.on('getLocations', (locationArray) => {
+      console.log('getLocations socket endpoint was hit')
+      this.locations = locationArray.data;
+    });
         
     socket.on('timerdata', (datasesh) => {
       //console.log(datasesh)
@@ -149,15 +152,21 @@ export class HomeComponent implements OnInit {
   } 
 
   ResetClick(): void {
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://odetect-dev2.brave.coop/');
     console.log("Reset Cliked");
     //io.sockets.emit('timerdata', {data: sessionDuration});
     socket.emit("resetbutton", this.Location);
     this.Timer_sesh = '0';
   }
 
+  getLocations(){
+    const socket = io('https://odetect-dev2.brave.coop/');
+    socket.emit('getLocations')
+    return this.locations;
+  }
+
   LocationSelector(): void {
-    this.Location = this.LocationForm.value.LocationControl
-    console.log(this.LocationForm.value.LocationControl);
+    this.getLocations();
+    this.Location = this.form.value.locations
   }
 }
