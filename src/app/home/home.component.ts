@@ -74,8 +74,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     const socket = io('https://odetect-dev2.brave.coop/');
+    socket.emit('getLocations')
     moment.tz.setDefault("UTC");
-    this.getLocations()
     socket.on('Hello', (data) => {
       console.log(data);
     });
@@ -143,6 +143,7 @@ export class HomeComponent implements OnInit {
     socket.on('getLocations', (locationArray) => {
       console.log('getLocations socket endpoint was hit')
       this.locations = locationArray.data;
+      this.form.controls.locations.patchValue(this.locations[0]);
     });
         
     socket.on('timerdata', (datasesh) => {
