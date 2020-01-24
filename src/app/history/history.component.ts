@@ -34,7 +34,7 @@ export class HistoryComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    const socket = io('https://odetect-dev2.brave.coop/');
+    const socket = io('localhost:8080/');
     socket.emit('getLocations')
 
 
@@ -103,13 +103,13 @@ export class HistoryComponent implements OnInit {
   }
   
   getLocations(){
-    const socket = io('https://odetect-dev2.brave.coop/');
+    const socket = io('localhost:8080/');
     socket.emit('getLocations')
     return this.locations;
   }
 
   HistorySelector(){
-    const socket = io('https://odetect-dev2.brave.coop/');
+    const socket = io('localhost:8080/');
     this.Location = this.HistoryForm.value.locations
     this.Entries = this.HistoryForm.value.NumEntries
     socket.emit('getHistory', this.Location, this.Entries);
