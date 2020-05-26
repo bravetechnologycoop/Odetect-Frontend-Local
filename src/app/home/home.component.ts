@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const socket = io('localhost:8080/');
+    const socket = io('https://sensors.odetect.brave.coop/');
     socket.emit('getLocations')
     moment.tz.setDefault("UTC");
     socket.on('Hello', (data) => {
@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
   } 
 
   ResetClick(): void {
-    const socket = io('localhost:8080/');
+    const socket = io('https://sensors.odetect.brave.coop/');
     console.log("Reset Cliked");
     //io.sockets.emit('timerdata', {data: sessionDuration});
     socket.emit("resetbutton", this.Location);
@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
   }
 
   getLocations(){
-    const socket = io('localhost:8080/');
+    const socket = io('https://sensors.odetect.brave.coop/');
     socket.emit('getLocations')
     return this.locations;
   }
