@@ -45,7 +45,6 @@ export class HistoryComponent implements OnInit {
     socket.on('getLocations', (locationArray) => {
       console.log('getLocations socket endpoint was hit')
       this.locations = locationArray.data;
-      this.HistoryForm.controls.locations.patchValue(this.locations[0]);
     });
     
     socket.on('sendHistory', (datasesh) => {
