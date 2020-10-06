@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import * as io from 'socket.io-client';
+import helpers from '../app.functions'
+import { of } from 'rxjs';
+
 
 @Component({
   selector: 'app-history',
@@ -10,26 +13,43 @@ import * as io from 'socket.io-client';
 
 export class HistoryComponent implements OnInit {
 
-  Location: string = "BraveOffice"
+  HistoryForm: FormGroup = null;
+  locations = [];
+
+
+  Location: string = ""
   Entries: string = "15"
 
-  HistoryForm = new FormGroup({
-    HistorySelect: new FormControl('BraveOffice'),
-    NumEntries: new FormControl('15')
-  });
+  constructor(private formBuilder: FormBuilder) {
+    this.HistoryForm = this.formBuilder.group({
+      locations: [''],
+      NumEntries: '15'
+    });
 
-  constructor(/*private data: DataService*/) { }
 
+    of(this.getLocations()).subscribe(locations => {
+      this.locations = locations;
+      this.HistoryForm.controls.locations.patchValue(Location);
+      this.HistoryForm.controls.locations.patchValue('15');
+    });
+  }
   ngOnInit(): void {
-    const socket = io('https://odetect-dev.brave.coop/');
+    const socket = io('https://sensors.odetect.brave.coop/');
+    socket.emit('getLocations')
 
- 
 
     socket.on('Hello', (data) => {
       console.log(data);
     });
+
+    socket.on('getLocations', (locationArray) => {
+      console.log('getLocations socket endpoint was hit')
+      this.locations = locationArray.data;
+    });
     
     socket.on('sendHistory', (datasesh) => {
+      console.log('socket hit for history')
+      console.log(datasesh.data)
       // Deletes the old table to replace it with the new selection 
       let oldTable = <HTMLTableElement>document.getElementById('sessionsHistory');
       for(var x = oldTable.rows.length; x > 1; x--)
@@ -52,11 +72,11 @@ export class HistoryComponent implements OnInit {
 
           let starttime = row.insertCell(2);
           starttime.className = 'historyCell';
-          starttime.innerHTML = datasesh.data[i].start_time.slice(0,19);
+          starttime.innerHTML = helpers.formatDate(datasesh.data[i].start_time);
 
           let endtime = row.insertCell(3);
           endtime.className = 'historyCell';
-          endtime.innerHTML = datasesh.data[i].end_time.slice(0,19);
+          endtime.innerHTML = helpers.formatDate(datasesh.data[i].end_time);
 
           let state = row.insertCell(4);
           state.className = 'historyCell';
@@ -79,13 +99,18 @@ export class HistoryComponent implements OnInit {
           notes.innerHTML = datasesh.data[i].notes;
         }
     });
-  } 
+  }
+  
+  getLocations(){
+    const socket = io('https://sensors.odetect.brave.coop/');
+    socket.emit('getLocations')
+    return this.locations;
+  }
+
   HistorySelector(){
-    const socket = io('https://odetect-dev.brave.coop/');
-
-    this.Location = this.HistoryForm.value.HistorySelect
+    const socket = io('https://sensors.odetect.brave.coop/');
+    this.Location = this.HistoryForm.value.locations
     this.Entries = this.HistoryForm.value.NumEntries
-
     socket.emit('getHistory', this.Location, this.Entries);
   }
 }

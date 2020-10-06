@@ -1,18 +1,17 @@
 <h1>Sessions History</h1>
 
 <body>
-  <form [formGroup]="HistoryForm" (ngSubmit)="HistorySelector()">
-    <label>
-      Location:
-      <select formControlName="HistorySelect">
-        <option value="BraveOffice">BraveOffice</option>
-        <option value="BraveOffice2">BraveOffice2</option>
-      </select>
-    </label>
+    <form [formGroup]="HistoryForm" (ngSubmit)="HistorySelector()">
+        <label for="locations">Location</label>
+        <select formControlName="locations" id ="locations">
+          <option *ngFor="let location of locations; let i = index" [value]="locations[i]">
+            {{locations[i]}}
+          </option>
+        </select>
     <br>
     <label>
       Number of Entries:
-      <input type="text" formControlName="NumEntries" required>
+      <input type="text" formControlName="NumEntries"required>
     </label>
     <br>
     <br>
